@@ -12,7 +12,18 @@ const Input = ({
   autoFocus,
   type,
   errorMessage,
+  validator,
 }) => {
+  const [showError, setShowError] = useState(false);
+
+  const onChange = useCallback((e) => {
+    handleChange(e);
+    
+    if (typeof validator === 'function') {
+      setShowError(validator(e.target.value));
+    }
+  }, [handleChange, validator]);
+
   return (
     <>
       <Grid item xs={12} sm={half ? 6 : 12}>
@@ -22,7 +33,7 @@ const Input = ({
           onChange={handleChange}
           fullWidth
           required
-          helperText={errorMessage}
+          helperText={showError && errorMessage}
           variant="outlined"
           autoFocus={autoFocus}
           type={type}
