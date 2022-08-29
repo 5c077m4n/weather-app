@@ -11,8 +11,10 @@ import {
 // actions creator//
 export const getPosts = (page) => async (dispatch) => {
   try {
-    const { data } = await api.getPosts(page);
-    dispatch({ type: GET_All, payload: data });
+    const {
+      data: { data, currentPages, numberOfPages },
+    } = await api.getPosts(page);
+    dispatch({ type: GET_All, payload: { data, currentPages, numberOfPages } });
   } catch (error) {
     console.log(error);
   }
@@ -20,7 +22,7 @@ export const getPosts = (page) => async (dispatch) => {
 export const getPost = (id) => async (dispatch) => {
   try {
     const { data } = await api.getPost(id);
-    dispatch({ type: GET_SiNGLE_POST, payload: data });
+    dispatch({ type: GET_SiNGLE_POST, payload: { post: data } });
   } catch (error) {
     console.log(error);
   }
@@ -32,7 +34,7 @@ export const getPostsBySearch = (searchQuery) => async (dispatch) => {
       data: { data },
     } = await api.getPostBySearch(searchQuery);
 
-    dispatch({ type: GET_BY_SEARCH, payload: data });
+    dispatch({ type: GET_BY_SEARCH, payload: { data } });
   } catch (error) {
     console.log(error);
   }

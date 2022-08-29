@@ -1,37 +1,38 @@
 import React, { useState } from "react";
 import {
-  Grid,
-  Grow,
   Container,
+  Grow,
+  Grid,
   AppBar,
   TextField,
   Button,
   Paper,
 } from "@material-ui/core";
-import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { getPostsBySearch } from "../../actions/posts";
+import { useHistory, useLocation } from "react-router-dom";
+import ChipInput from "material-ui-chip-input";
 
+import { getPostsBySearch } from "../../actions/posts";
 import Posts from "../Posts/Posts";
 import Form from "../Form/Form";
 import Paginate from "../Paginate";
-import useStyle from "./style";
-import ChipInput from "material-ui-chip-input";
+import useStyles from "./style";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
-
 const Home = () => {
-  const [currentId, setCurrentId] = useState(0);
-  const dispatch = useDispatch();
+  const classes = useStyles();
   const query = useQuery();
-  const history = useHistory();
   const page = query.get("page") || 1;
   const searchQuery = query.get("searchQuery");
-  const classes = useStyle();
+
+  const [currentId, setCurrentId] = useState(0);
+  const dispatch = useDispatch();
+
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState([]);
+  const history = useHistory();
 
   const searchPost = () => {
     if (search.trim() || tags) {
@@ -43,10 +44,17 @@ const Home = () => {
       history.push("/");
     }
   };
-  const handleAdd = (tag) => setTags([...tags, tag]);
 
-  const handleDelete = (tagToDelete) =>
-    setTags(tags.filter((tag) => tag !== tagToDelete));
+  const handleKeyPress = (e) => {
+    if (e.keyCode === 13) {
+      searchPost();
+    }
+  };
+
+  const handleAddChip = (tag) => setTags([...tags, tag]);
+
+  const handleDeleteChip = (chipToDelete) =>
+    setTags(tags.filter((tag) => tag !== chipToDelete));
 
   return (
     <Grow in>
@@ -55,8 +63,8 @@ const Home = () => {
           container
           justifyContent="space-between"
           alignItems="stretch"
-          className={classes.gridContainer}
           spacing={3}
+          className={classes.gridContainer}
         >
           <Grid item xs={12} sm={6} md={9}>
             <Posts setCurrentId={setCurrentId} />
@@ -68,30 +76,34 @@ const Home = () => {
               color="inherit"
             >
               <TextField
+                onKeyDown={handleKeyPress}
                 name="search"
-                label="weather Search"
                 variant="outlined"
+                label="Search Memories"
                 fullWidth
                 value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                }}
+                onChange={(e) => setSearch(e.target.value)}
               />
               <ChipInput
+                style={{ margin: "10px 0" }}
                 value={tags}
-                style={{ margin: "10px, 0" }}
-                onAdd={handleAdd}
-                onDelete={handleDelete}
+                onAdd={(chip) => handleAddChip(chip)}
+                onDelete={(chip) => handleDeleteChip(chip)}
+                label="Search Tags"
                 variant="outlined"
-                label="search tags"
               />
-              <Button variant="contained" color="primary" onClick={searchPost}>
+              <Button
+                onClick={searchPost}
+                className={classes.searchButton}
+                variant="contained"
+                color="primary"
+              >
                 Search
               </Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
             {!searchQuery && !tags.length && (
-              <Paper elevation={6} className={classes.paginate}>
+              <Paper className={classes.pagination} elevation={6}>
                 <Paginate page={page} />
               </Paper>
             )}

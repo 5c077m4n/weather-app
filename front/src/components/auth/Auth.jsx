@@ -62,7 +62,6 @@ const Auth = () => {
     }
   };
   const googleFailure = (err) => {
-    console.log(err);
     console.log("Unsuccessfully Google Sign In ");
   };
 
@@ -83,6 +82,7 @@ const Auth = () => {
                   handleChange={handleChange}
                   half
                   autoFocus
+                  errorMessage="min 2 characters"
                 />
                 <Input
                   name="last Name"
@@ -90,6 +90,7 @@ const Auth = () => {
                   handleChange={handleChange}
                   half
                   autoFocus
+                  errorMessage="min 2 characters"
                 />
               </>
             )}
@@ -98,6 +99,7 @@ const Auth = () => {
               label="Email"
               handleChange={handleChange}
               type="email"
+              errorMessage="it should be a valid email address"
             />
             <Input
               name="password"
@@ -105,6 +107,7 @@ const Auth = () => {
               handleChange={handleChange}
               type={userShowPassword ? "text" : "password"}
               handleShowPassword={handleShowPassword}
+              errorMessage="password should be 8-20 characters and include at least 1 letter,1 number and 1 special character!"
             />
             {isSignUp && (
               <Input
@@ -112,6 +115,7 @@ const Auth = () => {
                 label="Verified Password"
                 handleChange={handleChange}
                 type="password"
+                errorMassage="password don't match"
               />
             )}
           </Grid>
