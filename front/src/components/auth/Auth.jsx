@@ -40,7 +40,10 @@ const Auth = () => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(currentFormData => ({
+      ...currentFormData,
+      [e.target.name]: e.target.value,
+     }));
   };
 
   const handleShowPassword = () => SetUserShowPassword((toggle) => !toggle);
@@ -82,6 +85,7 @@ const Auth = () => {
                   handleChange={handleChange}
                   half
                   autoFocus
+                  validator={value => value.length > 2}
                   errorMessage="min 2 characters"
                 />
                 <Input
@@ -90,6 +94,7 @@ const Auth = () => {
                   handleChange={handleChange}
                   half
                   autoFocus
+                  validator={value => value.length > 2}
                   errorMessage="min 2 characters"
                 />
               </>
@@ -107,6 +112,7 @@ const Auth = () => {
               handleChange={handleChange}
               type={userShowPassword ? "text" : "password"}
               handleShowPassword={handleShowPassword}
+              validator={value => value.length >= 8 && value.length <= 20 && /\d/.test(value) && /\[a-zA-Z]/.test(value)}
               errorMessage="password should be 8-20 characters and include at least 1 letter,1 number and 1 special character!"
             />
             {isSignUp && (
